@@ -8,7 +8,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import AirTable from "@/components/AirTable.vue";
 export default {
@@ -16,9 +15,7 @@ export default {
     AirTable,
   },
   data() {
-    return {
-      base: "appgykZBGTF92MnHu",
-    };
+    return {};
   },
 };
 </script>
