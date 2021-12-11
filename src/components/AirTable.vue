@@ -86,13 +86,7 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          small
-          color="primary"
-          @click="editItem(item)"
-          class="mr-2"
-          v-if="pastDay"
-        >
+        <v-btn small color="primary" @click="editItem(item)" class="mr-2">
           <v-icon> mdi-pencil</v-icon>
         </v-btn>
       </template>
@@ -113,7 +107,6 @@ export default {
       dialog: false,
       search: null,
       dialogDelete: false,
-      pastDay: false,
       headers: [
         { text: "Randevu Tarihi", value: "fields.appointment_date" },
         { text: "İsim", value: "fields.agent_name" },
@@ -175,7 +168,6 @@ export default {
       const y = q.getFullYear();
       const date = new Date(y, m, d).toISOString();
       if (date > mydate) {
-        this.pastDay = true;
         return "red";
       } else {
         return "green";
