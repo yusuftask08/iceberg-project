@@ -1,16 +1,26 @@
 <template>
   <div>
+    <v-toolbar flat class="toolbar-color">
+      <h2 class="h2">Randevular</h2>
+    </v-toolbar>
     <div>
-      <v-toolbar flat class="toolbar-color">
-        <h2 class="h2">Randevular</h2>
-      </v-toolbar>
+      <AirTable />
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import AirTable from "@/components/AirTable.vue";
+export default {
+  components: {
+    AirTable,
+  },
+  data() {
+    return {
+      base: "appgykZBGTF92MnHu",
+    };
+  },
+};
 </script>
-
 <style>
 </style>

@@ -36,12 +36,12 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
-          <v-list-item class="px-2" @click="toggleMini = !toggleMini">
+          <v-list-item class="mt-2" @click="toggleMini = !toggleMini">
             <v-list-item-avatar>
               <v-icon>mdi-account-outline</v-icon>
             </v-list-item-avatar>
             <v-list-item-content class="text-truncate">
-              Yusuf Taskiran
+              Iceberg Estates
             </v-list-item-content>
             <v-btn icon small>
               <v-icon>mdi-chevron-left</v-icon>
