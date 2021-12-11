@@ -1,29 +1,36 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-
+import Apps from '../views/App/Apps.vue'
+import Dashboard from '../views/App/Dashboard.vue'
+import Appointments from '../views/App/Appointments.vue'
+import AppointmentsCreate from '../views/App/AppointmentsCreate.vue'
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+    component: Apps,
+    children: [{
+            name: 'Dashboard',
+            path: '',
+            component: Dashboard,
+        },
+        {
+            name: 'AppointmentsCreate',
+            path: '/appointments-create',
+            component: AppointmentsCreate,
+        },
+        {
+            name: 'Appointments',
+            path: '/appointments',
+            component: Appointments,
+        },
+    ]
+}];
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router
