@@ -1,21 +1,26 @@
 import {
     API_URL,
     API_KEY,
-    APP_ID
+    APP_ID,
+    API_POST_CODES_URL,
+    FIXED_POST_CODE
 } from "@/common/config.js";
 import axios from "axios"
 import {
     APP_GET_TABLE_LISTED,
     APP_PUT_DATA,
-    APP_PERSONEL
+    APP_PERSONEL,
+    APP_POST_CODES_API_GET
 } from "./actions.type";
 import {
     SET_TABLE_DATA,
+    SET_POST_CODE,
     SET_AGENT_DATA
 } from "./mutations.type"
 const state = {
     tableData: [],
     agent: [],
+    WorkplaceLocation: [],
 };
 const getters = {
     setTableData(state) {
@@ -23,6 +28,9 @@ const getters = {
     },
     setAgentData(state) {
         return state.agent;
+    },
+    setWorkLocation() {
+        return state.WorkplaceLocation;
     }
 };
 const actions = {
@@ -77,7 +85,15 @@ const actions = {
         }).catch(err => {
             console.log(`err`, err);
         })
-    }
+    },
+    [APP_POST_CODES_API_GET](context) {
+        axios.get(API_POST_CODES_URL + FIXED_POST_CODE).then(data => {
+            console.log(`data`, data.data.result)
+            context.commit(SET_POST_CODE, data.data.result)
+        }).catch(err => {
+            console.log(`err`, err);
+        })
+    },
 }
 const mutations = {
     [SET_TABLE_DATA](state, payload) {
@@ -85,6 +101,9 @@ const mutations = {
     },
     [SET_AGENT_DATA](state, payload) {
         state.agent = payload;
+    },
+    [SET_POST_CODE](state, payload) {
+        state.WorkplaceLocation = payload;
     }
 };
 export default {
