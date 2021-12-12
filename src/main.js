@@ -9,6 +9,7 @@ Vue.use(VueGoogleMaps, {
     load: {
         key: "AIzaSyDdivj09ZYpzeFzvS6oWlCeXRUUY5QabM8",
     },
+    libraries: 'geometry',
     installComponents: true,
 });
 new Vue({

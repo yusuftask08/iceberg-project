@@ -101,7 +101,7 @@ const actions = {
     },
     [APP_POST_CODES_ADRESS](context, credentials) {
         axios.get(API_POST_CODES_URL + `?lon=${credentials.lng}&lat=${credentials.lat}`).then(data => {
-            context.commit(SET_APP_ADRESS, data.data.result[0].postcode)
+            context.commit(SET_APP_ADRESS, data.data.result[0])
         }).catch(err => {
             console.log(`err`, err);
         })

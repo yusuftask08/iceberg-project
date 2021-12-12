@@ -101,7 +101,11 @@
               outlined
               label="Personel"
             />
-            <v-text-field v-model="adress" outlined label="Randevu Adresi" />
+            <v-text-field
+              v-model="adress.postcode"
+              outlined
+              label="Randevu Adresi"
+            />
           </v-col>
           <div class="d-flex justify-center">
             <v-btn width="270px" color="primary" class="py-3 px-3" height="55">
@@ -151,6 +155,7 @@ export default {
       dialog: false,
       dialog1: false,
       modal2: false,
+      distance: null,
       DateTime: null,
       time: "",
       picker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -172,7 +177,6 @@ export default {
   },
   created() {
     this.init();
-    console.log(`this.picker`, this.picker);
   },
   computed: {
     ...mapGetters({
@@ -203,6 +207,28 @@ export default {
     handleMapClick(e) {
       this.marker.position = { lat: e.latLng.lat(), lng: e.latLng.lng() };
       this.$store.dispatch(APP_POST_CODES_ADRESS, this.marker.position);
+      const lat = this.adress.latitude;
+      const lng = this.adress.longitude;
+      const from = new google.maps.LatLng(51.729157, 0.478027);
+      const to = new google.maps.LatLng(Number(lat), Number(lng));
+      this.distance = (
+        google.maps.geometry.spherical.computeDistanceBetween(from, to) / 1000
+      ).toFixed(2);
+      const service = new google.maps.DistanceMatrixService();
+      const matrixOptions = {
+        origins: [from],
+        destinations: [to],
+        travelMode: "DRIVING",
+        unitSystem: google.maps.UnitSystem.IMPERIAL,
+      };
+      service.getDistanceMatrix(matrixOptions, callback);
+      function callback(response, status) {
+        if (status !== "OK") {
+          alert("Hata uzunluk ölçülemedi");
+          return;
+        }
+        console.log(response);
+      }
     },
   },
 };
