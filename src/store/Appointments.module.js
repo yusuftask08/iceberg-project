@@ -7,16 +7,22 @@ import axios from "axios"
 import {
     APP_GET_TABLE_LISTED,
     APP_PUT_DATA,
+    APP_PERSONEL
 } from "./actions.type";
 import {
-    SET_TABLE_DATA
+    SET_TABLE_DATA,
+    SET_AGENT_DATA
 } from "./mutations.type"
 const state = {
     tableData: [],
+    agent: [],
 };
 const getters = {
     setTableData(state) {
         return state.tableData;
+    },
+    setAgentData(state) {
+        return state.agent;
     }
 };
 const actions = {
@@ -57,11 +63,28 @@ const actions = {
         }).catch(err => {
             console.log(`err`, err);
         })
+    },
+    [APP_PERSONEL](context) {
+        axios.get(API_URL + APP_ID + "/Agents?fields%5B%5D=agent_name", {
+            headers: {
+                Authorization: "Bearer " + API_KEY,
+                "Content-Type": "application/json"
+            }
+        }).then(data => {
+            console.log(`data`, data.data.records)
+            context.commit(SET_AGENT_DATA, data.data.records)
+
+        }).catch(err => {
+            console.log(`err`, err);
+        })
     }
 }
 const mutations = {
     [SET_TABLE_DATA](state, payload) {
         state.tableData = payload;
+    },
+    [SET_AGENT_DATA](state, payload) {
+        state.agent = payload;
     }
 };
 export default {
