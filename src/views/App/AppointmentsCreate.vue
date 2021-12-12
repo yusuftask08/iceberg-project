@@ -131,8 +131,6 @@
             />
           </GmapMap>
         </v-card>
-        <!-- <button>Detect Location</button>
-        <p>Selected Position: {{ marker.position }}</p> -->
       </v-col>
     </div>
   </div>
@@ -140,7 +138,11 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { APP_PERSONEL, APP_POST_CODES_API_GET } from "@/store/actions.type";
+import {
+  APP_PERSONEL,
+  APP_POST_CODES_API_GET,
+  APP_POST_CODES_ADRESS,
+} from "@/store/actions.type";
 import axios from "axios";
 import moment from "moment";
 export default {
@@ -160,7 +162,6 @@ export default {
       email: "",
       tel: "",
       personal: "",
-      adress: "",
       appointmentsDate: "",
       marker: { position: { lat: 51.729157, lng: 0.478027 } },
       center: { lat: 51.729157, lng: 0.478027 },
@@ -177,6 +178,7 @@ export default {
     ...mapGetters({
       personals: "setAgentData",
       workPlocation: "setWorkLocation",
+      adress: "setAppAdress",
     }),
   },
   methods: {
@@ -191,20 +193,16 @@ export default {
       this.$store.dispatch(APP_PERSONEL);
       this.$store.dispatch(APP_POST_CODES_API_GET);
     },
-    //sets the position of marker when dragged
     handleMarkerDrag(e) {
       this.marker.position = { lat: e.latLng.lat(), lng: e.latLng.lng() };
     },
-
-    //Moves the map view port to marker
     panToMarker() {
       this.$refs.mapRef.panTo(this.marker.position);
       this.$refs.mapRef.setZoom(18);
     },
-    //Moves the marker to click position on the map
     handleMapClick(e) {
       this.marker.position = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-      console.log(e);
+      this.$store.dispatch(APP_POST_CODES_ADRESS, this.marker.position);
     },
   },
 };
