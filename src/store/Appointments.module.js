@@ -11,20 +11,23 @@ import {
     APP_PUT_DATA,
     APP_PERSONEL,
     APP_POST_CODES_API_GET,
-    APP_POST_CODES_ADRESS
-
+    APP_POST_CODES_ADRESS,
+    APP_CREATE_RECORDS,
+    APP_CREATE_CONTACT_RECORDS
 } from "./actions.type";
 import {
     SET_TABLE_DATA,
     SET_POST_CODE,
     SET_AGENT_DATA,
-    SET_APP_ADRESS
+    SET_APP_ADRESS,
+    SET_CONTACT_ID
 } from "./mutations.type"
 const state = {
     tableData: [],
     agent: [],
     WorkplaceLocation: [],
     adress: [],
+    contactId: null,
 };
 const getters = {
     setTableData(state) {
@@ -38,6 +41,9 @@ const getters = {
     },
     setAppAdress() {
         return state.adress;
+    },
+    setContactId() {
+        return state.contactId;
     }
 };
 const actions = {
@@ -106,6 +112,50 @@ const actions = {
             console.log(`err`, err);
         })
     },
+    [APP_CREATE_RECORDS](context, credentials) {
+        axios.post(API_URL + APP_ID + "/Appointments", {
+                fields: {
+                    appointment_date: credentials.appdate,
+                    appointment_postcode: credentials.postcode,
+                    contact_id: [
+                        credentials.contactId
+                    ],
+                    agent_id: [
+                        credentials.agentId
+                    ]
+                }
+            }, {
+                headers: {
+                    Authorization: "Bearer " + API_KEY,
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(data => {}).catch(err => {
+                console.log(`err`, err);
+            })
+    },
+    [APP_CREATE_CONTACT_RECORDS](context, credentials) {
+        console.log(`credentials contact`, credentials)
+        axios.post(API_URL + APP_ID + "/Contacts", {
+            fields: {
+                contact_name: credentials.name,
+                contact_surname: credentials.surname,
+                contact_email: credentials.email,
+                contact_phone: credentials.tel,
+                Appointments: []
+            }
+        }, {
+            headers: {
+                Authorization: "Bearer " + API_KEY,
+                "Content-Type": "application/json"
+            }
+        }).then(data => {
+            context.commit(SET_CONTACT_ID, data.data.id)
+            this.dispatch(APP_GET_TABLE_LISTED);
+        }).catch(err => {
+            console.log(`err`, err);
+        })
+    },
 }
 const mutations = {
     [SET_TABLE_DATA](state, payload) {
@@ -119,6 +169,9 @@ const mutations = {
     },
     [SET_APP_ADRESS](state, payload) {
         state.adress = payload
+    },
+    [SET_CONTACT_ID](state, payload) {
+        state.contactId = payload;
     }
 };
 export default {

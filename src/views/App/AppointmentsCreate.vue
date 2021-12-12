@@ -109,7 +109,7 @@
           </v-col>
           <div class="d-flex justify-center">
             <v-btn
-              @click.stop="dialogInfo = true"
+              @click.stop="(dialogInfo = true), appCreate()"
               width="270px"
               color="primary"
               class="mt-4"
@@ -179,6 +179,8 @@ import {
   APP_PERSONEL,
   APP_POST_CODES_API_GET,
   APP_POST_CODES_ADRESS,
+  APP_CREATE_CONTACT_RECORDS,
+  APP_CREATE_RECORDS,
 } from "@/store/actions.type";
 import axios from "axios";
 import moment from "moment";
@@ -222,6 +224,7 @@ export default {
     ...mapGetters({
       personals: "setAgentData",
       adress: "setAppAdress",
+      contactId: "setContactId",
     }),
     BackToOffice() {
       const seconds = this.durationVal / 60;
@@ -244,6 +247,27 @@ export default {
     },
   },
   methods: {
+    appCreate() {
+      this.$store.dispatch(APP_CREATE_CONTACT_RECORDS, {
+        name: this.name,
+        surname: this.surname,
+        email: this.email,
+        tel: this.tel,
+      });
+      this.$store.dispatch(APP_CREATE_RECORDS, {
+        contactId: this.contactId,
+        postcode: this.adress.postcode,
+        appdate: this.DateTime,
+        agentId: this.personal,
+      });
+      this.name = "";
+      this.surname = "";
+      this.email = "";
+      this.tel = "";
+      this.personal = "";
+      this.adress.postcode = "";
+      this.time = "";
+    },
     dateSelect(e) {
       this.picker = e;
     },
