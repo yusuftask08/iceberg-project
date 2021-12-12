@@ -108,10 +108,43 @@
             />
           </v-col>
           <div class="d-flex justify-center">
-            <v-btn width="270px" color="primary" class="py-3 px-3" height="55">
-              <v-icon class="mr-2">mdi-text-box-plus-outline</v-icon>
-              Randevu oluştur</v-btn
+            <v-btn
+              @click.stop="dialogInfo = true"
+              width="270px"
+              color="primary"
+              class="mt-4"
+              height="55"
             >
+              <v-icon class="mr-2"> mdi-text-box-plus-outline </v-icon>
+              Randevu oluştur
+            </v-btn>
+          </div>
+          <div>
+            <v-dialog v-model="dialogInfo" max-width="400">
+              <v-card>
+                <v-card-title class="text-h5 d-flex justify-center">
+                  Randevu Bilgilendirme
+                </v-card-title>
+                <v-card-text>
+                  <h4>Randevu Adresi : {{ AppointmentsAdress }}</h4>
+                  <h4>Ofise Uzaklık (mil) : {{ distance }}</h4>
+                  <h4>
+                    Ofisten Çıkış Zamanı (Tahmini) : {{ LeavingToOffice }}
+                  </h4>
+                  <h4>Ofise Dönüş Zamanı (Tahmini) : {{ BackToOffice }}</h4>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialogInfo = false"
+                  >
+                    Tamam
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </div>
         </v-card>
       </v-col>
@@ -152,12 +185,18 @@ import moment from "moment";
 export default {
   data() {
     return {
+      backOffice: null,
+      leavingOffice: null,
       dialog: false,
+      dialogInfo: false,
       dialog1: false,
       modal2: false,
+      alert: true,
       distance: null,
+      durationText: null,
+      durationVal: null,
       DateTime: null,
-      time: "",
+      time: null,
       picker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
         .toISOString()
         .substr(0, 10),
@@ -171,8 +210,9 @@ export default {
       marker: { position: { lat: 51.729157, lng: 0.478027 } },
       center: { lat: 51.729157, lng: 0.478027 },
       mapOptions: {
-        disableDefaultUI: true,
+        disableDefaultUI: false,
       },
+      AppointmentsAdress: "",
     };
   },
   created() {
@@ -181,9 +221,27 @@ export default {
   computed: {
     ...mapGetters({
       personals: "setAgentData",
-      workPlocation: "setWorkLocation",
       adress: "setAppAdress",
     }),
+    BackToOffice() {
+      const seconds = this.durationVal / 60;
+      const second = Math.floor(seconds);
+      const strsecond = second.toString();
+      const now = this.DateTime;
+      const backHours = moment(now).add(1, "hours").toDate();
+      const backMinute = moment(backHours).add(strsecond, "minute").toDate();
+      const backMinutes = moment(backMinute).format("hh:mm");
+      return backMinutes;
+    },
+    LeavingToOffice() {
+      const seconds = this.durationVal / 60;
+      const second = Math.floor(seconds);
+      const strsecond = second.toString();
+      const now = this.DateTime;
+      const olderDate = moment(now).subtract(strsecond, "minutes").toDate();
+      const olderDates = moment(olderDate).format("hh:mm");
+      return olderDates;
+    },
   },
   methods: {
     dateSelect(e) {
@@ -211,23 +269,30 @@ export default {
       const lng = this.adress.longitude;
       const from = new google.maps.LatLng(51.729157, 0.478027);
       const to = new google.maps.LatLng(Number(lat), Number(lng));
-      this.distance = (
-        google.maps.geometry.spherical.computeDistanceBetween(from, to) / 1000
-      ).toFixed(2);
-      const service = new google.maps.DistanceMatrixService();
+      let service = new google.maps.DistanceMatrixService();
       const matrixOptions = {
         origins: [from],
         destinations: [to],
         travelMode: "DRIVING",
         unitSystem: google.maps.UnitSystem.IMPERIAL,
       };
-      service.getDistanceMatrix(matrixOptions, callback);
-      function callback(response, status) {
-        if (status !== "OK") {
-          alert("Hata uzunluk ölçülemedi");
-          return;
+      service.getDistanceMatrix(matrixOptions, this.callback);
+    },
+    callback(response, status) {
+      if (status == "OK") {
+        var origins = response.originAddresses;
+        var destinations = response.destinationAddresses;
+        for (var i = 0; i < origins.length; i++) {
+          var results = response.rows[i].elements;
+          for (var j = 0; j < results.length; j++) {
+            var element = results[j];
+            console.log(element);
+            this.distance = element.distance.text;
+            this.duration = element.duration.text;
+            this.durationVal = element.duration.value;
+            this.AppointmentsAdress = destinations[j];
+          }
         }
-        console.log(response);
       }
     },
   },
