@@ -60,7 +60,6 @@ const actions = {
                 }
             )
             .then((data) => {
-                console.log(`data`, data)
                 context.commit(SET_TABLE_DATA, data.data.records)
             });
     },
@@ -135,7 +134,6 @@ const actions = {
             })
     },
     [APP_CREATE_CONTACT_RECORDS](context, credentials) {
-        console.log(`credentials contact`, credentials)
         axios.post(API_URL + APP_ID + "/Contacts", {
             fields: {
                 contact_name: credentials.name,

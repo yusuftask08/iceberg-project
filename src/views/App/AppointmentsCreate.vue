@@ -182,7 +182,6 @@ import {
   APP_CREATE_CONTACT_RECORDS,
   APP_CREATE_RECORDS,
 } from "@/store/actions.type";
-import axios from "axios";
 import moment from "moment";
 export default {
   data() {
@@ -310,7 +309,6 @@ export default {
           var results = response.rows[i].elements;
           for (var j = 0; j < results.length; j++) {
             var element = results[j];
-            console.log(element);
             this.distance = element.distance.text;
             this.duration = element.duration.text;
             this.durationVal = element.duration.value;
