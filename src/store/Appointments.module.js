@@ -64,7 +64,6 @@ const actions = {
             });
     },
     [APP_PUT_DATA](context, credentials) {
-        console.log(`credentials`, credentials)
         axios.put(API_URL + APP_ID + "/Contacts/" + credentials.fields.contact_id, {
             fields: {
                 contact_name: credentials.fields.contact_name[0],
