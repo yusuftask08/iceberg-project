@@ -5,7 +5,6 @@
       :items="data"
       sort-by="calories"
       :search="search"
-      class="elevation-1"
     >
       <template v-slot:[`item.fields.appointment_date`]="{ item }">
         <v-chip :color="getColor(item.fields.appointment_date)" dark>
@@ -26,7 +25,7 @@
           <v-dialog v-model="dialog" max-width="800px">
             <v-card>
               <v-card-title class="justify-center d-flex">
-                <span class="text-h5">Randevu Düzenle</span>
+                <span class="text-h5">Randevuyu Düzenle</span>
               </v-card-title>
               <v-card-text>
                 <v-container>
@@ -177,7 +176,6 @@ export default {
       this.$store.dispatch(APP_GET_TABLE_LISTED);
     },
     editItem(item) {
-      console.log(`item`, item);
       this.editedIndex = this.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
