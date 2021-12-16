@@ -88,16 +88,15 @@
         <v-btn small color="primary" @click="editItem(item)" class="mr-2">
           <v-icon> mdi-pencil</v-icon>
         </v-btn>
-      </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="getData"> Yenile </v-btn>
+        <v-btn small color="warning" @click="deleteItem(item)">
+          <v-icon> mdi-delete </v-icon>
+        </v-btn>
       </template>
     </v-data-table>
   </div>
 </template>
-
 <script>
-import { APP_PUT_DATA } from "@/store/actions.type";
+import { APP_PUT_DATA, APP_DELETE_RECORDS } from "@/store/actions.type";
 export default {
   name: "Airtable",
   props: ["data"],
@@ -150,9 +149,6 @@ export default {
       val || this.closeDelete();
     },
   },
-  created() {
-    this.getData();
-  },
   methods: {
     getColor(e) {
       const mydate = e;
@@ -167,13 +163,16 @@ export default {
         return "green";
       }
     },
-    getData() {
-      this.$store.dispatch(APP_GET_TABLE_LISTED);
-    },
     editItem(item) {
       this.editedIndex = this.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+    },
+    deleteItem(item) {
+      this.editedItem.Id = item.id;
+      this.editedIndex = this.data.indexOf(item);
+      this.$store.dispatch(APP_DELETE_RECORDS, this.editedItem.Id);
+      this.editedItem = Object.assign({}, item);
     },
     close() {
       this.dialog = false;

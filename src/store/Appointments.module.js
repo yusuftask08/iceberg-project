@@ -13,7 +13,8 @@ import {
     APP_POST_CODES_API_GET,
     APP_POST_CODES_ADRESS,
     APP_CREATE_RECORDS,
-    APP_CREATE_CONTACT_RECORDS
+    APP_CREATE_CONTACT_RECORDS,
+    APP_DELETE_RECORDS
 } from "./actions.type";
 import {
     SET_TABLE_DATA,
@@ -63,7 +64,7 @@ const actions = {
                 context.commit(SET_TABLE_DATA, data.data.records)
             });
     },
-    [APP_PUT_DATA](context, credentials) {
+    [APP_PUT_DATA](credentials) {
         axios.put(API_URL + APP_ID + "/Contacts/" + credentials.fields.contact_id, {
             fields: {
                 contact_name: credentials.fields.contact_name[0],
@@ -73,6 +74,18 @@ const actions = {
                 Appointments: [credentials.id]
             }
         }, {
+            headers: {
+                Authorization: "Bearer " + API_KEY,
+                "Content-Type": "application/json"
+            }
+        }).then(_ => {
+            this.dispatch(APP_GET_TABLE_LISTED);
+        }).catch(err => {
+            console.log(`err`, err);
+        })
+    },
+    [APP_DELETE_RECORDS](credentials) {
+        axios.delete(API_URL + APP_ID + "/Appointments/" + credentials, {
             headers: {
                 Authorization: "Bearer " + API_KEY,
                 "Content-Type": "application/json"
