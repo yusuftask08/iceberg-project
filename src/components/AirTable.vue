@@ -97,10 +97,10 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { APP_GET_TABLE_LISTED, APP_PUT_DATA } from "@/store/actions.type";
+import { APP_PUT_DATA } from "@/store/actions.type";
 export default {
   name: "Airtable",
+  props: ["data"],
   data: function () {
     return {
       dialog: false,
@@ -141,11 +141,6 @@ export default {
         },
       },
     };
-  },
-  computed: {
-    ...mapGetters({
-      data: "setTableData",
-    }),
   },
   watch: {
     dialog(val) {
