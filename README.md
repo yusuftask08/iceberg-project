@@ -24,6 +24,10 @@ $ npm install
 
 $ npm run serve 
 ```
+## Proje Deploy
+* <a href="https://iceberg-project.vercel.app"> Vercel </a>
+
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
